@@ -1,0 +1,22 @@
+{
+	"name": "streamx",
+	"image": "mcr.microsoft.com/vscode/devcontainers/miniconda:3",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"njpwerner.autodocstring",
+				"donjayamanne.githistory",
+				"GitHub.copilot",
+				"GitHub.copilot-labs",
+				"eamodio.gitlens",
+				"mutantdino.resourcemonitor",
+				"Gruntfuggly.todo-tree",
+				"ms-python.python",
+				"DavidAnson.vscode-markdownlint",
+				"shd101wyy.markdown-preview-enhanced"
+			]
+		}
+	},
+	"onCreateCommand": "conda init bash",
+	"postCreateCommand": "./.devcontainer/build-conda-env.sh"
+}

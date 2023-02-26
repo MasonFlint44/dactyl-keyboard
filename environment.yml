@@ -1,0 +1,14 @@
+name: dactyl-keyboard
+channels:
+  - cadquery
+  - conda-forge
+  - defaults
+dependencies:
+  - python==3.8
+  - cadquery==master
+  - pip
+  - pip:
+    - dataclasses-json
+    - numpy
+    - scipy
+    - solidpython
