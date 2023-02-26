@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Build models",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/dactyl_manuform.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "autoReload": { "enable": true },
+            "env": { "PYTHONPATH": "/opt/conda/envs/dactyl-keyboard/bin/python" }
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "autoReload": { "enable": true },
+            "env": { "PYTHONPATH": "/opt/conda/envs/dactyl-keyboard/bin/python" }
+        },
+        {
+            "name": "Python: Debug Test File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "purpose": ["debug-test"],
+            "autoReload": { "enable": true },
+            "env": { "PYTHONPATH": "/opt/conda/envs/dactyl-keyboard/bin/python" }
+        }
+    ]
+}
