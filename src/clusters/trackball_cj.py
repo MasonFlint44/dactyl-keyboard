@@ -1,20 +1,25 @@
-from clusters.trackball_orbyl import TrackballOrbyl
-import math
 import json
+import math
 import os
+
+import numpy as np
+
+from clusters.trackball_orbyl import TrackballOrbyl
 
 
 class TrackballCJ(TrackballOrbyl):
     tbcj_inner_diameter = 42
     tbcj_thickness = 2
     tbcj_outer_diameter = 53
-    
+
     @staticmethod
     def name():
         return "TRACKBALL_CJ"
 
     def get_config(self):
-        with open(os.path.join("src", "clusters", "json", "TRACKBALL_CJ.json"), mode='r') as fid:
+        with open(
+            os.path.join("src", "clusters", "json", "TRACKBALL_CJ.json"), mode="r"
+        ) as fid:
             data = json.load(fid)
 
         superdata = super().get_config()
@@ -73,7 +78,7 @@ class TrackballCJ(TrackballOrbyl):
         return shape
 
     def bl_place(self, shape):
-        debugprint('thumb_bl_place()')
+        debugprint("thumb_bl_place()")
         shape = rotate(shape, [-4, -35, 52])
         shape = translate(shape, self.thumborigin())
         shape = translate(shape, [-56.3, -43.3, -23.5])
@@ -86,12 +91,14 @@ class TrackballCJ(TrackballOrbyl):
         return shape
 
     def thumb_layout(self, shape):
-        return union([
-            self.tr_place(rotate(shape, [0, 0, self.thumb_plate_tr_rotation])),
-            self.tl_place(rotate(shape, [0, 0, self.thumb_plate_tl_rotation])),
-            self.ml_place(rotate(shape, [0, 0, self.thumb_plate_ml_rotation])),
-            self.bl_place(rotate(shape, [0, 0, self.thumb_plate_bl_rotation])),
-        ])
+        return union(
+            [
+                self.tr_place(rotate(shape, [0, 0, self.thumb_plate_tr_rotation])),
+                self.tl_place(rotate(shape, [0, 0, self.thumb_plate_tl_rotation])),
+                self.ml_place(rotate(shape, [0, 0, self.thumb_plate_ml_rotation])),
+                self.bl_place(rotate(shape, [0, 0, self.thumb_plate_bl_rotation])),
+            ]
+        )
 
     def tbcj_edge_post(self, i):
         shape = box(post_size, post_size, self.tbcj_thickness)
@@ -108,17 +115,18 @@ class TrackballCJ(TrackballOrbyl):
 
         shape = []
         for i in range(8):
-            shape_ = hull_from_shapes([
-                center,
-                self.tbcj_edge_post(i),
-                self.tbcj_edge_post(i + 1),
-            ])
+            shape_ = hull_from_shapes(
+                [
+                    center,
+                    self.tbcj_edge_post(i),
+                    self.tbcj_edge_post(i + 1),
+                ]
+            )
             shape.append(shape_)
         shape = union(shape)
 
         shape = difference(
-            shape,
-            [cylinder(self.tbcj_inner_diameter / 2, self.tbcj_thickness + 0.1)]
+            shape, [cylinder(self.tbcj_inner_diameter / 2, self.tbcj_thickness + 0.1)]
         )
 
         return shape
@@ -128,12 +136,12 @@ class TrackballCJ(TrackballOrbyl):
         tb = self.track_place(self.tbcj_holder())
         return union([t, tb])
 
-    def thumbcaps(self, side='right'):
+    def thumbcaps(self, side="right"):
         t = self.thumb_layout(sa_cap(1))
         return t
 
     def thumb_connectors(self, side="right"):
-        print('thumb_connectors()')
+        print("thumb_connectors()")
         hulls = []
 
         # Top two
@@ -279,17 +287,82 @@ class TrackballCJ(TrackballOrbyl):
 
     # todo update walls for wild track, still identical to orbyl
     def walls(self, side="right"):
-        print('thumb_walls()')
+        print("thumb_walls()")
         # thumb, walls
-        shape = union([wall_brace(self.ml_place, -0.3, 1, web_post_tr(), self.ml_place, 0, 1, web_post_tl())])
         shape = union(
-            [shape, wall_brace(self.bl_place, 0, 1, web_post_tr(), self.bl_place, 0, 1, web_post_tl())])
+            [
+                wall_brace(
+                    self.ml_place,
+                    -0.3,
+                    1,
+                    web_post_tr(),
+                    self.ml_place,
+                    0,
+                    1,
+                    web_post_tl(),
+                )
+            ]
+        )
         shape = union(
-            [shape, wall_brace(self.bl_place, -1, 0, web_post_tl(), self.bl_place, -1, 0, web_post_bl())])
+            [
+                shape,
+                wall_brace(
+                    self.bl_place,
+                    0,
+                    1,
+                    web_post_tr(),
+                    self.bl_place,
+                    0,
+                    1,
+                    web_post_tl(),
+                ),
+            ]
+        )
         shape = union(
-            [shape, wall_brace(self.bl_place, -1, 0, web_post_tl(), self.bl_place, 0, 1, web_post_tl())])
+            [
+                shape,
+                wall_brace(
+                    self.bl_place,
+                    -1,
+                    0,
+                    web_post_tl(),
+                    self.bl_place,
+                    -1,
+                    0,
+                    web_post_bl(),
+                ),
+            ]
+        )
         shape = union(
-            [shape, wall_brace(self.ml_place, 0, 1, web_post_tl(), self.bl_place, 0, 1, web_post_tr())])
+            [
+                shape,
+                wall_brace(
+                    self.bl_place,
+                    -1,
+                    0,
+                    web_post_tl(),
+                    self.bl_place,
+                    0,
+                    1,
+                    web_post_tl(),
+                ),
+            ]
+        )
+        shape = union(
+            [
+                shape,
+                wall_brace(
+                    self.ml_place,
+                    0,
+                    1,
+                    web_post_tl(),
+                    self.bl_place,
+                    0,
+                    1,
+                    web_post_tr(),
+                ),
+            ]
+        )
 
         corner = box(1, 1, self.tbcj_thickness)
 
@@ -310,59 +383,129 @@ class TrackballCJ(TrackballOrbyl):
 
         return shape
 
-    def connection(self, side='right'):
-        print('thumb_connection()')
+    def connection(self, side="right"):
+        print("thumb_connection()")
         # clunky bit on the top left thumb connection  (normal connectors don't work well)
-        shape = union([bottom_hull(
+        shape = union(
             [
-                left_key_place(translate(web_post(), wall_locate2(-1, 0)), cornerrow, -1, low_corner=True, side=side),
-                left_key_place(translate(web_post(), wall_locate3(-1, 0)), cornerrow, -1, low_corner=True, side=side),
-                self.ml_place(translate(web_post_tr(), wall_locate2(-0.3, 1))),
-                self.ml_place(translate(web_post_tr(), wall_locate3(-0.3, 1))),
+                bottom_hull(
+                    [
+                        left_key_place(
+                            translate(web_post(), wall_locate2(-1, 0)),
+                            cornerrow,
+                            -1,
+                            low_corner=True,
+                            side=side,
+                        ),
+                        left_key_place(
+                            translate(web_post(), wall_locate3(-1, 0)),
+                            cornerrow,
+                            -1,
+                            low_corner=True,
+                            side=side,
+                        ),
+                        self.ml_place(translate(web_post_tr(), wall_locate2(-0.3, 1))),
+                        self.ml_place(translate(web_post_tr(), wall_locate3(-0.3, 1))),
+                    ]
+                )
             ]
-        )])
+        )
 
-        shape = union([shape,
-                       hull_from_shapes(
-                           [
-                               left_key_place(translate(web_post(), wall_locate2(-1, 0)), cornerrow, -1, low_corner=True,
-                                              side=side),
-                               left_key_place(translate(web_post(), wall_locate3(-1, 0)), cornerrow, -1, low_corner=True,
-                                              side=side),
-                               self.ml_place(translate(web_post_tr(), wall_locate2(-0.3, 1))),
-                               self.ml_place(translate(web_post_tr(), wall_locate3(-0.3, 1))),
-                               self.tl_place(web_post_tl()),
-                           ]
-                       )
-                       ])  # )
-
-        shape = union([shape, hull_from_shapes(
+        shape = union(
             [
-                left_key_place(translate(web_post(), wall_locate1(-1, 0)), cornerrow, -1, low_corner=True, side=side),
-                left_key_place(translate(web_post(), wall_locate2(-1, 0)), cornerrow, -1, low_corner=True, side=side),
-                left_key_place(translate(web_post(), wall_locate3(-1, 0)), cornerrow, -1, low_corner=True, side=side),
-                self.tl_place(web_post_tl()),
+                shape,
+                hull_from_shapes(
+                    [
+                        left_key_place(
+                            translate(web_post(), wall_locate2(-1, 0)),
+                            cornerrow,
+                            -1,
+                            low_corner=True,
+                            side=side,
+                        ),
+                        left_key_place(
+                            translate(web_post(), wall_locate3(-1, 0)),
+                            cornerrow,
+                            -1,
+                            low_corner=True,
+                            side=side,
+                        ),
+                        self.ml_place(translate(web_post_tr(), wall_locate2(-0.3, 1))),
+                        self.ml_place(translate(web_post_tr(), wall_locate3(-0.3, 1))),
+                        self.tl_place(web_post_tl()),
+                    ]
+                ),
             ]
-        )])
+        )  # )
 
-        shape = union([shape, hull_from_shapes(
+        shape = union(
             [
-                left_key_place(web_post(), cornerrow, -1, low_corner=True, side=side),
-                left_key_place(translate(web_post(), wall_locate1(-1, 0)), cornerrow, -1, low_corner=True, side=side),
-                key_place(web_post_bl(), 0, cornerrow),
-                self.tl_place(web_post_tl()),
+                shape,
+                hull_from_shapes(
+                    [
+                        left_key_place(
+                            translate(web_post(), wall_locate1(-1, 0)),
+                            cornerrow,
+                            -1,
+                            low_corner=True,
+                            side=side,
+                        ),
+                        left_key_place(
+                            translate(web_post(), wall_locate2(-1, 0)),
+                            cornerrow,
+                            -1,
+                            low_corner=True,
+                            side=side,
+                        ),
+                        left_key_place(
+                            translate(web_post(), wall_locate3(-1, 0)),
+                            cornerrow,
+                            -1,
+                            low_corner=True,
+                            side=side,
+                        ),
+                        self.tl_place(web_post_tl()),
+                    ]
+                ),
             ]
-        )])
+        )
 
-        shape = union([shape, hull_from_shapes(
+        shape = union(
             [
-                self.ml_place(web_post_tr()),
-                self.ml_place(translate(web_post_tr(), wall_locate1(-0.3, 1))),
-                self.ml_place(translate(web_post_tr(), wall_locate2(-0.3, 1))),
-                self.ml_place(translate(web_post_tr(), wall_locate3(-0.3, 1))),
-                self.tl_place(web_post_tl()),
+                shape,
+                hull_from_shapes(
+                    [
+                        left_key_place(
+                            web_post(), cornerrow, -1, low_corner=True, side=side
+                        ),
+                        left_key_place(
+                            translate(web_post(), wall_locate1(-1, 0)),
+                            cornerrow,
+                            -1,
+                            low_corner=True,
+                            side=side,
+                        ),
+                        key_place(web_post_bl(), 0, cornerrow),
+                        self.tl_place(web_post_tl()),
+                    ]
+                ),
             ]
-        )])
+        )
+
+        shape = union(
+            [
+                shape,
+                hull_from_shapes(
+                    [
+                        self.ml_place(web_post_tr()),
+                        self.ml_place(translate(web_post_tr(), wall_locate1(-0.3, 1))),
+                        self.ml_place(translate(web_post_tr(), wall_locate2(-0.3, 1))),
+                        self.ml_place(translate(web_post_tr(), wall_locate3(-0.3, 1))),
+                        self.tl_place(web_post_tl()),
+                    ]
+                ),
+            ]
+        )
 
         return shape
 

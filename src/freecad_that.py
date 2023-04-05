@@ -38,15 +38,14 @@ print('Done')
 
 
 def generate_freecad_script(target_dir, filenames, config=""):
-    full_filenames = ','.join(['"' + os.path.join(target_dir, x) + '"' for x in filenames])
+    full_filenames = ",".join([f'"{os.path.join(target_dir, x)}"' for x in filenames])
     full_filenames = str.replace(full_filenames, "\\", "\\\\")
     print(full_filenames)
-    script = script_template.replace('%filenames%', full_filenames)
-    filename = config + '_freecad.py' if config != "" else "freecad.py"
+    script = script_template.replace("%filenames%", full_filenames)
+    filename = config + "_freecad.py" if config != "" else "freecad.py"
     script_file = os.path.join(target_dir, filename)
     if os.path.exists(script_file):
         os.remove(script_file)
     f = open(script_file, "a")
     f.write(script)
     f.close()
-

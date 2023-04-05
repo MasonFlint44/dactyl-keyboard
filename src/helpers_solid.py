@@ -143,7 +143,7 @@ def extrude_poly(outer_poly, inner_polys=None, height=1):
 
 
 def import_file(fname, convexity=4):
-    full_name = fname + r".stl"
+    full_name = fname + ".stl"
     print("IMPORTING FROM {}".format(full_name))
 
     return sl.import_stl(full_name, convexity=convexity)
