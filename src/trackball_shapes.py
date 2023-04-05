@@ -1,12 +1,15 @@
-from helpers_cadquery import *
 import os.path as path
+
 import numpy
+
+# TODO: should this import helpers_solid conditionally?
+from helpers_cadquery import *
 
 ball_diam = 34  # ball diameter
 ball_space = 2.0  # additional room around ball in socket, 1mm
 
 
-def get_ball(with_space: False):
+def get_ball(with_space=False):
     diam = ball_diam
     if with_space:
         diam += ball_space
@@ -42,9 +45,16 @@ def gen_holder():
     screw2 = translate(cylinder(screw_hole_d / 2, h + 1, 20), (0, -(screw_dist / 2), 0))
 
     # Attempt at bottom hole, numbers mostly fudged but seems in ballpark
-    bottom_hole = union([translate(box(4.5, 4, 6), (0, -2, 0)), translate(cylinder(2.25, 6, 40), (0, 0, 0))])
+    bottom_hole = union(
+        [
+            translate(box(4.5, 4, 6), (0, -2, 0)),
+            translate(cylinder(2.25, 6, 40), (0, 0, 0)),
+        ]
+    )
 
-    final = translate(difference(base_shape, [ball, screw1, screw2, bottom_hole]), (0, 0, -15))
+    final = translate(
+        difference(base_shape, [ball, screw1, screw2, bottom_hole]), (0, 0, -15)
+    )
 
     return final
 
@@ -58,15 +68,19 @@ def coords(angle, dist):
 def gen_socket_shape(radius, wall):
     diam = radius * 2
     ball = sphere(radius)
-    socket_base = difference(ball, [translate(box(diam + 1, diam + 1, diam), (0, 0, diam / 2))])
-    top_cylinder = translate(difference(cylinder(radius, 4), [cylinder(radius - wall, 6)]), (0, 0, 2))
+    socket_base = difference(
+        ball, [translate(box(diam + 1, diam + 1, diam), (0, 0, diam / 2))]
+    )
+    top_cylinder = translate(
+        difference(cylinder(radius, 4), [cylinder(radius - wall, 6)]), (0, 0, 2)
+    )
     socket_base = union([socket_base, top_cylinder])
 
     return socket_base
 
 
 def socket_bearing_fin(outer_r, outer_depth, axle_r, axle_depth, cut_offset, groove):
-    pi3 = (numpy.pi / 2)
+    pi3 = numpy.pi / 2
     l = 20
 
     x, y = coords(0, l)
@@ -106,7 +120,9 @@ def track_outer():
     outer_width = 5
     axle_radius = 3
     axle_width = 8
-    base_fin = socket_bearing_fin(outer_radius, outer_width, axle_radius, axle_width, -22, False)
+    base_fin = socket_bearing_fin(
+        outer_radius, outer_width, axle_radius, axle_width, -22, False
+    )
     offsets = (0, -2, -6)
 
     cutter1 = translate(base_fin, offsets)
@@ -123,7 +139,9 @@ def track_cutter():
     outer_width = 3
     axle_radius = 1.5
     axle_width = 6.5
-    base_fin = socket_bearing_fin(outer_radius, outer_width, axle_radius, axle_width, -25, True)
+    base_fin = socket_bearing_fin(
+        outer_radius, outer_width, axle_radius, axle_width, -25, True
+    )
     offsets = (0, -2, -6)
 
     cutter1 = translate(base_fin, offsets)
@@ -142,4 +160,3 @@ def gen_track_socket():
 
 # result = difference(main_fin, [cutter_fin])
 export_file(shape=gen_holder(), fname=path.join(".", "things", "gen_holder"))
-
