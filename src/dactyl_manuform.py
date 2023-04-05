@@ -43,6 +43,7 @@ def debugprint(info):
 ## IMPORT DEFAULT CONFIG IN CASE NEW PARAMETERS EXIST
 
 
+# TODO: pull all of the stuff out of this make_dactyl function
 def make_dactyl():
     right_cluster = None
     left_cluster = None
@@ -67,6 +68,7 @@ def make_dactyl():
 
     data = None
 
+    # TODO: update to use argparse instead of getopt and sys.argv
     ## CHECK FOR CONFIG FILE AND WRITE TO ANY VARIABLES IN FILE.
     opts, args = getopt.getopt(sys.argv[1:], "", ["config=", "save_path="])
     for opt, arg in opts:
@@ -2398,6 +2400,7 @@ def run():
             fname=path.join(save_path, config_name + "_oled_clip_assy_test"),
         )
 
+    # TODO: don't use globals
     all_merged = locals().copy()
     for item in globals():
         all_merged[item] = globals()[item]

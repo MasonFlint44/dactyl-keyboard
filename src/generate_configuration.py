@@ -7,6 +7,7 @@ pi = 3.14159
 d2r = pi / 180
 r2d = 180 / pi
 
+# TODO: break this up into config classes
 shape_config = {
     "ENGINE": "solid",  # 'solid' = solid python / OpenSCAD, 'cadquery' = cadquery / OpenCascade
     # 'ENGINE': 'cadquery',  # 'solid' = solid python / OpenSCAD, 'cadquery' = cadquery / OpenCascade
