@@ -1,9 +1,9 @@
 import cadquery as cq
-from scipy.spatial import ConvexHull as sphull
 import numpy as np
-
+from scipy.spatial import ConvexHull as sphull
 
 debug_trace = False
+
 
 def debugprint(info):
     if debug_trace:
@@ -15,25 +15,34 @@ def box(width, height, depth):
 
 
 def cylinder(radius, height, segments=100):
-    shape = cq.Workplane("XY").union(cq.Solid.makeCylinder(radius=radius, height=height))
-    shape = translate(shape, (0, 0, -height/2))
+    shape = cq.Workplane("XY").union(
+        cq.Solid.makeCylinder(radius=radius, height=height)
+    )
+    shape = translate(shape, (0, 0, -height / 2))
     return shape
 
 
 def sphere(radius):
-    return cq.Workplane('XY').union(cq.Solid.makeSphere(radius))
+    return cq.Workplane("XY").union(cq.Solid.makeSphere(radius))  # type: ignore
 
 
 def cone(r1, r2, height):
-    return cq.Workplane('XY').union(
-        cq.Solid.makeCone(radius1=r1, radius2=r2, height=height))
+    return cq.Workplane("XY").union(
+        cq.Solid.makeCone(radius1=r1, radius2=r2, height=height)
+    )
 
 
 def rotate(shape, angle):
     origin = (0, 0, 0)
-    shape = shape.rotate(axisStartPoint=origin, axisEndPoint=(1, 0, 0), angleDegrees=angle[0])
-    shape = shape.rotate(axisStartPoint=origin, axisEndPoint=(0, 1, 0), angleDegrees=angle[1])
-    shape = shape.rotate(axisStartPoint=origin, axisEndPoint=(0, 0, 1), angleDegrees=angle[2])
+    shape = shape.rotate(
+        axisStartPoint=origin, axisEndPoint=(1, 0, 0), angleDegrees=angle[0]
+    )
+    shape = shape.rotate(
+        axisStartPoint=origin, axisEndPoint=(0, 1, 0), angleDegrees=angle[1]
+    )
+    shape = shape.rotate(
+        axisStartPoint=origin, axisEndPoint=(0, 0, 1), angleDegrees=angle[2]
+    )
     return shape
 
 
@@ -42,12 +51,12 @@ def translate(shape, vector):
 
 
 def mirror(shape, plane=None):
-    debugprint('mirror()')
+    debugprint("mirror()")
     return shape.mirror(mirrorPlane=plane)
 
 
 def union(shapes):
-    debugprint('union()')
+    debugprint("union()")
     shape = None
     for item in shapes:
         if shape is None:
@@ -58,7 +67,7 @@ def union(shapes):
 
 
 def add(shapes):
-    debugprint('union()')
+    debugprint("union()")
     shape = None
     for item in shapes:
         if shape is None:
@@ -69,7 +78,7 @@ def add(shapes):
 
 
 def difference(shape, shapes):
-    debugprint('difference()')
+    debugprint("difference()")
     for item in shapes:
         shape = shape.cut(item)
     return shape
@@ -112,7 +121,7 @@ def hull_from_points(points):
         faces.append(face_from_points(fpnts))
 
     shape = cq.Solid.makeSolid(cq.Shell.makeShell(faces))
-    shape = cq.Workplane('XY').union(shape)
+    shape = cq.Workplane("XY").union(shape)
     return shape
 
 
@@ -131,7 +140,7 @@ def hull_from_shapes(shapes, points=None):
     return shape
 
 
-def tess_hull(shapes, sl_tol=.5, sl_angTol=1):
+def tess_hull(shapes, sl_tol=0.5, sl_angTol=1):
     # debugprint('hull_from_shapes()')
     vertices = []
     solids = []
@@ -149,15 +158,12 @@ def tess_hull(shapes, sl_tol=.5, sl_angTol=1):
 
 
 def triangle_hulls(shapes):
-    debugprint('triangle_hulls()')
-    hulls = [cq.Workplane('XY')]
+    debugprint("triangle_hulls()")
+    hulls = [cq.Workplane("XY")]
     for i in range(len(shapes) - 2):
-        hulls.append(hull_from_shapes(shapes[i: (i + 3)]))
+        hulls.append(hull_from_shapes(shapes[i : (i + 3)]))
 
     return union(hulls)
-
-
-
 
 
 def bottom_hull(p, height=0.001):
@@ -184,14 +190,14 @@ def bottom_hull(p, height=0.001):
             try:
                 shp.vertices()
             except:
-                0
+                pass
         shape = union([shape, hull_from_shapes((shape, t_shape))])
 
     return shape
 
 
 def polyline(point_list):
-    return cq.Workplane('XY').polyline(point_list)
+    return cq.Workplane("XY").polyline(point_list)
 
 
 # def project_to_plate():
@@ -207,29 +213,34 @@ def extrude_poly(outer_poly, inner_polys=None, height=1):  # vector=(0,0,1)):
         for item in inner_polys:
             inner_wires.append(cq.Wire.assembleEdges(item.edges().objects))
 
-    return cq.Workplane('XY').add(
-        cq.Solid.extrudeLinear(outerWire=outer_wires, innerWires=inner_wires, vecNormal=cq.Vector(0, 0, height)))
+    return cq.Workplane("XY").add(
+        cq.Solid.extrudeLinear(
+            outerWire=outer_wires,  # type: ignore
+            innerWires=inner_wires,  # type: ignore
+            vecNormal=cq.Vector(0, 0, height),
+        )
+    )
 
 
 def import_file(fname, convexity=None):
     print("IMPORTING FROM {}".format(fname))
-    return cq.Workplane('XY').add(cq.importers.importShape(
-        cq.exporters.ExportTypes.STEP,
-        fname + ".step"))
+    return cq.Workplane("XY").add(
+        cq.importers.importShape(cq.exporters.ExportTypes.STEP, fname + ".step")
+    )
+
 
 def export_stl(shape, fname):
     print("EXPORTING STL TO {}".format(fname))
     cq.exporters.export(shape, fname=fname + "_cadquery.stl", exportType="STL")
 
+
 def export_file(shape, fname):
     print("EXPORTING TO {}".format(fname))
-    cq.exporters.export(w=shape, fname=fname + ".step",
-                        exportType='STEP')
+    cq.exporters.export(w=shape, fname=fname + ".step", exportType="STEP")
 
     export_stl(shape, fname)
 
 
 def export_dxf(shape, fname):
     print("EXPORTING TO {}".format(fname))
-    cq.exporters.export(w=shape, fname=fname + ".dxf",
-                        exportType='DXF')
+    cq.exporters.export(w=shape, fname=fname + ".dxf", exportType="DXF")

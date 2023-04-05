@@ -1,11 +1,14 @@
-import solid as sl
 from subprocess import run
 
+import solid as sl
+
 debug_trace = False
+
 
 def debugprint(info):
     if debug_trace:
         print(info)
+
 
 def box(width, height, depth):
     return sl.cube([width, height, depth], center=True)
@@ -31,21 +34,21 @@ def translate(shape, vector):
     return sl.translate(tuple(vector))(shape)
 
 
-def mirror(shape, plane=None):
-    debugprint('mirror()')
+def mirror(shape, plane):
+    debugprint("mirror()")
     planes = {
-        'XY': [0, 0, 1],
-        'YX': [0, 0, -1],
-        'XZ': [0, 1, 0],
-        'ZX': [0, -1, 0],
-        'YZ': [1, 0, 0],
-        'ZY': [-1, 0, 0],
+        "XY": [0, 0, 1],
+        "YX": [0, 0, -1],
+        "XZ": [0, 1, 0],
+        "ZX": [0, -1, 0],
+        "YZ": [1, 0, 0],
+        "ZY": [-1, 0, 0],
     }
-    return sl.mirror(planes[plane])(shape)
+    return sl.mirror(planes[plane])(shape)  # type: ignore
 
 
 def union(shapes):
-    debugprint('union()')
+    debugprint("union()")
     shape = None
     for item in shapes:
         if shape is None:
@@ -56,7 +59,7 @@ def union(shapes):
 
 
 def add(shapes):
-    debugprint('union()')
+    debugprint("union()")
     shape = None
     for item in shapes:
         if shape is None:
@@ -67,7 +70,7 @@ def add(shapes):
 
 
 def difference(shape, shapes):
-    debugprint('difference()')
+    debugprint("difference()")
     for item in shapes:
         shape -= item
     return shape
@@ -90,18 +93,17 @@ def hull_from_shapes(shapes, points=None):
     return sl.hull()(*hs)
 
 
-def tess_hull(shapes, sl_tol=.5, sl_angTol=1):
+def tess_hull(shapes, sl_tol=0.5, sl_angTol=1):
     return sl.hull()(*shapes)
 
 
 def triangle_hulls(shapes):
-    debugprint('triangle_hulls()')
+    debugprint("triangle_hulls()")
     hulls = []
     for i in range(len(shapes) - 2):
-        hulls.append(hull_from_shapes(shapes[i: (i + 3)]))
+        hulls.append(hull_from_shapes(shapes[i : (i + 3)]))
 
     return union(hulls)
-
 
 
 def bottom_hull(p, height=0.001):
@@ -112,11 +114,12 @@ def bottom_hull(p, height=0.001):
         t_shape = sl.linear_extrude(height=height, twist=0, convexity=0, center=True)(
             proj
         )
-        t_shape = sl.translate([0, 0, height / 2 - 10])(t_shape)
+        t_shape = sl.translate([0, 0, height / 2 - 10])(t_shape)  # type: ignore
         if shape is None:
             shape = t_shape
         shape = sl.hull()(p, shape, t_shape)
     return shape
+
 
 def polyline(point_list):
     return sl.polygon(point_list)
@@ -127,11 +130,16 @@ def polyline(point_list):
 #     for wire in square.wires().objects:
 #         plane = cq.Workplane('XY').add(cq.Face.makeFromWires(wire))
 
+
 def extrude_poly(outer_poly, inner_polys=None, height=1):
     if inner_polys is not None:
-        return sl.linear_extrude(height=height, twist=0, convexity=0, center=True)(outer_poly, *inner_polys)
+        return sl.linear_extrude(height=height, twist=0, convexity=0, center=True)(
+            outer_poly, *inner_polys
+        )
     else:
-        return sl.linear_extrude(height=height, twist=0, convexity=0, center=True)(outer_poly)
+        return sl.linear_extrude(height=height, twist=0, convexity=0, center=True)(
+            outer_poly
+        )
 
 
 def import_file(fname, convexity=4):
@@ -145,9 +153,17 @@ def export_file(shape, fname):
     print("EXPORTING TO {}".format(fname))
     sl.scad_render_to_file(shape, fname + ".scad")
 
+
 def export_stl(shape, fname):
     print("EXPORTING STL TO {}".format(fname))
-    run(["C:\\Program Files\\OpenSCAD\\openscad.com", "-o",  fname + "_openscad.stl", fname + ".scad"])
+    run(
+        [
+            "C:\\Program Files\\OpenSCAD\\openscad.com",
+            "-o",
+            fname + "_openscad.stl",
+            fname + ".scad",
+        ]
+    )
 
 
 def export_dxf(shape, fname):
