@@ -1,6 +1,7 @@
-import os
 import json
+import os
 import sys
+
 import dactyl_manuform
 
 json_template = """
@@ -31,15 +32,17 @@ variations = [
     [5, 8],
     [6, 6],
     [6, 7],
-    [6, 8]
+    [6, 8],
 ]
 
+# TODO: update to use argparse
 gen_dir = sys.argv[1]
 
 try:
     print(gen_dir)
 except NameError:
     print("Must provide target directory for generating bulk models")
+    # TODO: update to raise exception instead of exiting
     sys.exit(-1)
 
 out_file = os.path.join(gen_dir, "bulk_config")
@@ -49,7 +52,7 @@ default = "DEFAULT"
 trackball = "TRACKBALL_WILD"
 hotswap = "HS_NOTCH"
 normal = "NOTCH"
-run_config = os.path.join(r"src", 'run_config.json')
+run_config = os.path.join("src", "run_config.json")
 
 
 def write_file(file_path, data):
@@ -61,7 +64,7 @@ def write_file(file_path, data):
 
 
 def set_overrides(override):
-    with open(run_config, mode='r') as fid:
+    with open(run_config, mode="r") as fid:
         data = json.load(fid)
     previous_overrides = data["overrides"]
     data["overrides"] = override
@@ -79,8 +82,10 @@ def finished():
 
 def write_config(rows, cols, engine, thumb1, plate, last_rows):
     config = json.loads(json_template)
-    name = str(rows) + "_x_" + str(cols) + "_" + plate  + "_" + last_rows  + "_" + thumb1
-    config["save_dir"] = os.path.join(gen_dir, str(rows) + "_x_" + str(cols), plate, last_rows)
+    name = str(rows) + "_x_" + str(cols) + "_" + plate + "_" + last_rows + "_" + thumb1
+    config["save_dir"] = os.path.join(
+        gen_dir, str(rows) + "_x_" + str(cols), plate, last_rows
+    )
     print("Generating: ", name)
     config["overrides"] = out_file
     config["save_name"] = name
@@ -94,7 +99,7 @@ def write_config(rows, cols, engine, thumb1, plate, last_rows):
     config["full_last_rows"] = True if last_rows == "full" else False
     config["ball_side"] = "both"
 
-    write_file(out_file + '.json', config)
+    write_file(out_file + ".json", config)
 
 
 for v in variations:
@@ -108,5 +113,3 @@ for v in variations:
 
 
 finished()
-
-
