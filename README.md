@@ -1,4 +1,5 @@
 # Wylderbuilds Dactyl Manuform - Python 3 - Cadquery
+
 So, THIS is a fork of a fork of a fork of a... You get the idea.
 
 This one is a direct fork of [joshreve's brilliant adaptation](https://github.com/joshreve/dactyl-keyboard)  of the original Clojure-based dactyl manuform generator redone in Python 3.
@@ -7,6 +8,7 @@ Without his work, none of this would have been nearly as easy and straightforwar
 This repo is what I've customized and use to generate the models for the prints I sell online at Wylderbuilds, my Etsy store.
 
 ## Main Differences and How to Make it Go
+
 Eventually, joshreve and I hope to merge our changes together, but until then, here's a quick rundown on the current changes.
 
 * Wylderbuilds Trackball cluster -- A new, low-rider Trackball cluster. ("thumb_style": "TRACKBALL_WILD")
@@ -54,7 +56,6 @@ I opened Patreon and Liberapay accounts to accept any donations folks might want
 [Wylderbuilds on Patreon](https://www.patreon.com/user?u=83640492)
 
 [![Donate using Liberapay](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/Wylderbuilds/donate)
-
 
 ## License
 
