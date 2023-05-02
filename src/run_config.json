@@ -1,5 +1,5 @@
 {
-    "engine": "solid",
+    "ENGINE": "solid",
     "save_dir": ".",
     "config_name": "DM",
     "overrides": "",
@@ -297,7 +297,7 @@
         0
     ],
     "oled_configurations": {
-        "undercut": {
+        "UNDERCUT": {
             "oled_mount_width": 15.0,
             "oled_mount_height": 35.0,
             "oled_mount_rim": 3.0,
@@ -320,7 +320,7 @@
             "oled_mount_undercut": 1.0,
             "oled_mount_undercut_thickness": 2.0
         },
-        "sliding": {
+        "SLIDING": {
             "oled_mount_width": 12.5,
             "oled_mount_height": 25.0,
             "oled_mount_rim": 2.5,
@@ -347,7 +347,7 @@
             "oled_edge_overlap_clearance": 2.5,
             "oled_edge_chamfer": 2.0
         },
-        "clip": {
+        "CLIP": {
             "oled_mount_width": 12.5,
             "oled_mount_height": 39.0,
             "oled_mount_rim": 2.0,
