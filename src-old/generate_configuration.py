@@ -2,8 +2,8 @@ import getopt
 import json
 import os
 import sys
+from math import pi
 
-pi = 3.14159
 d2r = pi / 180
 r2d = 180 / pi
 
