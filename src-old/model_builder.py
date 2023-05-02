@@ -1,6 +1,7 @@
 import copy
+import json
 
-from generate_configuration import *
+from generate_configuration import shape_config
 
 base = shape_config
 

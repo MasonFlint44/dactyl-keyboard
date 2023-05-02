@@ -31,16 +31,16 @@ def save_config(
     }
 
     if update_filename:
-        with open(os.path.join("..", "configs", f"{update_filename}.json")) as f:
+        with open(os.path.join("configs", f"{update_filename}.json")) as f:
             data = parse_raw_as(dict, f.read())
             config.update(data)
 
     if config_filename is None:
-        config_path = os.path.join(".", "run_config.json")
+        config_path = os.path.join("src", "run_config.json")
     else:
         config["save_dir"] = config_filename
         config["config_name"] = config_filename
-        config_path = os.path.join("..", "configs", f"{config_filename}.json")
+        config_path = os.path.join("configs", f"{config_filename}.json")
 
     with open(config_path, mode="w") as f:
         json.dump(config, f, indent=4, default=pydantic_encoder)
