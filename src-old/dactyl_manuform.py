@@ -4,10 +4,9 @@ import json
 import os
 import os.path as path
 import sys
+from math import pi
 
 import numpy as np
-from numpy import pi
-
 from clusters.carbonfet import CarbonfetCluster
 from clusters.custom_cluster import CustomCluster
 from clusters.default_cluster import DefaultCluster
@@ -30,7 +29,7 @@ def rad2deg(rad: float) -> float:
 debug_exports = False
 debug_trace = False
 
-
+# TODO: replace with logging.debug
 def debugprint(info):
     if debug_trace:
         print(info)

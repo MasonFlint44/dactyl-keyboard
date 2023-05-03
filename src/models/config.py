@@ -54,6 +54,47 @@ class ShapeConfig(BaseModel):
         default=11,
         description="controls overall height (original=9 with centercol=3 - use 16 for centercol=2)",
     )
+    extra_width: float = Field(
+        default=2.5, description="extra space between the base of keys - original=2"
+    )
+    extra_height: float = Field(default=1.0, description="original= 0.5")
+    wall_z_offset: int = Field(
+        default=15, description="length of the first downward_sloping part of the wall"
+    )
+    wall_x_offset: int = Field(
+        default=5,
+        description="offset in the x and/or y direction for the first downward_sloping part of the wall (negative)",
+    )
+    wall_y_offset: int = Field(
+        default=6,
+        description="offset in the x and/or y direction for the first downward_sloping part of the wall (negative)",
+    )
+    left_wall_x_offset: int = Field(
+        default=12,
+        description="specific values for the left side due to the minimal wall.",
+    )
+    left_wall_z_offset: int = Field(
+        default=3,
+        description="specific values for the left side due to the minimal wall.",
+    )
+    left_wall_lower_y_offset: int = Field(
+        default=0, description="specific values for the lower left corner."
+    )
+    left_wall_lower_z_offset: int = 0
+    wall_thickness: float = Field(
+        default=4.5,
+        description="wall thickness parameter used on upper/mid stage of the wall",
+    )
+    wall_base_y_thickness: float = Field(
+        default=4.5, description="wall thickness at the lower stage"
+    )
+    wall_base_x_thickness: float = Field(
+        default=4.5, description="wall thickness at the lower stage"
+    )
+    wall_base_back_thickness: float = Field(
+        default=4.5,
+        description="wall thickness at the lower stage specifically in back for interface",
+    )
     column_offsets: List[List[float]] = [
         [0, 0, 0],
         [0, 0, 0],
@@ -232,48 +273,6 @@ class ExperimentalConfig(BaseModel):
     )
     first_1_5U_row: int = 0
     last_1_5U_row: int = 5
-    # TODO: are below part of ShapeConfig instead?
-    extra_width: float = Field(
-        default=2.5, description="extra space between the base of keys - original=2"
-    )
-    extra_height: float = Field(default=1.0, description="original= 0.5")
-    wall_z_offset: int = Field(
-        default=15, description="length of the first downward_sloping part of the wall"
-    )
-    wall_x_offset: int = Field(
-        default=5,
-        description="offset in the x and/or y direction for the first downward_sloping part of the wall (negative)",
-    )
-    wall_y_offset: int = Field(
-        default=6,
-        description="offset in the x and/or y direction for the first downward_sloping part of the wall (negative)",
-    )
-    left_wall_x_offset: int = Field(
-        default=12,
-        description="specific values for the left side due to the minimal wall.",
-    )
-    left_wall_z_offset: int = Field(
-        default=3,
-        description="specific values for the left side due to the minimal wall.",
-    )
-    left_wall_lower_y_offset: int = Field(
-        default=0, description="specific values for the lower left corner."
-    )
-    left_wall_lower_z_offset: int = 0
-    wall_thickness: float = Field(
-        default=4.5,
-        description="wall thickness parameter used on upper/mid stage of the wall",
-    )
-    wall_base_y_thickness: float = Field(
-        default=4.5, description="wall thickness at the lower stage"
-    )
-    wall_base_x_thickness: float = Field(
-        default=4.5, description="wall thickness at the lower stage"
-    )
-    wall_base_back_thickness: float = Field(
-        default=4.5,
-        description="wall thickness at the lower stage specifically in back for interface",
-    )
 
 
 class FixedColumnStyleConfig(BaseModel):
@@ -555,3 +554,23 @@ class PcbConfig(BaseModel):
     pcb_hole_diameter: int = 2
     pcb_hole_pattern_width: float = 14.3
     pcb_hole_pattern_height: float = 14.3
+
+
+class GlobalConfig(
+    BottomPlateConfig,
+    ControllerMountConfig,
+    EngineConfig,
+    ExperimentalConfig,
+    FixedColumnStyleConfig,
+    OledMountConfig,
+    PcbConfig,
+    PlateHolesConfig,
+    ShapeConfig,
+    SwitchHoleConfig,
+    ThumbConfig,
+    TrackballCjConfig,
+    TrackballConfig,
+    TrackballInWallConfig,
+    TrackballJsConfig,
+):
+    pass
